@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["hook"] # Source directory
+
+[tool.isort]
+profile = "black"
+
+[project]
+name = "github-pre-commit" # Name of the project in pip
+version = "1.0.0"
+authors = [{ name = "Mario Zaja", email = "mzaja0@gmail.com" }]
+description = "Pre-commit hook to check that branch names and commit messages satisfy GitHub's conventions."
+readme = "README.md"
+license = { text = "MIT License" }
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["pre-commit", "git hook", "commit message", "branch name", "github"]
+
+[project.scripts]
+github-issue-number = "hook.main:main" # Entry point in .pre-commit-hooks.yaml
+
+[project.urls]
+"Homepage" = "https://github.com/mzaja/github-pre-commit"
+"Bug Tracker" = "https://github.com/mzaja/github-pre-commit/issues"

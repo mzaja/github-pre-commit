@@ -1,0 +1,6 @@
+- id: github-issue-number
+  name: check Github issue number
+  description: Checks that branch names and commit messages satisfy GitHub's conventions.
+  entry: github-issue-number
+  language: python
+  stages: [commit-msg]
