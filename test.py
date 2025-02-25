@@ -76,7 +76,10 @@ class HookIntegrationTests(TestCase):
             tmpfile.close()
             with mock.patch("hook.main.get_branch_name") as mock_get_branch_name:
                 mock_get_branch_name.return_value = branch_name
-                sys.argv = [hook.__name__, str(tmpfile.name)] + list(args)
+                # pre-commit inserts all the args hooks before the commit file name
+                # This is a very important distinction when using options accepting
+                # multiple arguments. If this is provided as the last option, 
+                sys.argv = [hook.__name__] + list(args) + [str(tmpfile.name)]
                 stderr_buffer = StringIO()
                 with (
                     self.assertRaises(SystemExit) as ctx,
@@ -114,7 +117,7 @@ class HookIntegrationTests(TestCase):
         self.assertEqual(self.error_code, 0)
 
         # Branch excluded by one of the regexes
-        self.call_hook("master", commit_msg, "--exclude-branches", "main", ".*ter$")
+        self.call_hook("master", commit_msg, "-x", "main", "-x", ".*ter$")
         self.assertEqual(self.error_code, 0)
 
         # Branch not excluded by regex

@@ -4,7 +4,8 @@ satisfy GitHub conventions which link the branches and commits to
 tickets on GitHub Issues.
 
 Flags:
-    --exclude-branches [patterns]: Regex patterns to exclude branches from branch name validations.
+    -x/--exclude-branches [pattern]: Regex pattern to exclude branches from branch name validations.
+                                     Can be provided multiple times.
     --multi-issue-commits: Allows specifying more than one GitHub issue number per commit.
     --auto-prepend: Automatically prepend the issue number from the branch name to the commit message.
     --auto-append: Automatically append the issue number from the branch name to the commit message.
@@ -85,12 +86,20 @@ def create_parser() -> ArgumentParser:
         help="Path to the file containing the git commit message.",
     )
     parser.add_argument(
+        "-x",
         "--exclude-branches",
         dest="exclude_branches_regexes",
-        action="extend",
-        nargs="+",
+        # 'extend' option cannot be used here because the commit message file comes as the
+        # final positional argument. A call '-x pattern msg_file' would treat msg_file as
+        # an exclude pattern, which would result in an error since the mandatory 
+        # commig_msg_file argument would be deemed to have been omitted.
+        action="append",
         default=[],
-        help="A list of regex patterns identifying which branches to exclude from the branch name checks.",
+        metavar="PATTERN",
+        help=(
+            "A regex pattern identifying which branches to exclude from the branch name checks. "
+            "Can be provided more than once."
+        ),
     )
     parser.add_argument(
         "--multi-issue-commits",
@@ -111,6 +120,9 @@ def create_parser() -> ArgumentParser:
     return parser
 
 
+# ---------------------------------------------------------------------------
+# MAIN
+# ---------------------------------------------------------------------------
 def main():
     """Main function. Entry point for the script."""
     parser = create_parser()
@@ -189,10 +201,3 @@ def main():
         exit(ex.exit_code)
 
     return exit(0)  # All validations have passed if this point is reached
-
-
-# ---------------------------------------------------------------------------
-# MAIN
-# ---------------------------------------------------------------------------
-if __name__ == "__main__":
-    main()
