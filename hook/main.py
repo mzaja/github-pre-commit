@@ -91,7 +91,7 @@ def create_parser() -> ArgumentParser:
         dest="exclude_branches_regexes",
         # 'extend' option cannot be used here because the commit message file comes as the
         # final positional argument. A call '-x pattern msg_file' would treat msg_file as
-        # an exclude pattern, which would result in an error since the mandatory 
+        # an exclude pattern, which would result in an error since the mandatory
         # commig_msg_file argument would be deemed to have been omitted.
         action="append",
         default=[],
