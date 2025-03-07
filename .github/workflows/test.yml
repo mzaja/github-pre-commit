@@ -20,9 +20,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
-    defaults:
-      run:
-        shell: bash
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -35,4 +32,4 @@ jobs:
         pip install --upgrade pip
         pip install pre-commit
     - name: Run tests
-      run: ./test.sh
+      run: bash test.sh
