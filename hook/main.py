@@ -128,18 +128,16 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
     branch_name = get_branch_name()
-    branch_issue_number = None
+    branch_issue_number = get_issue_number_from_branch_name(branch_name)
     branch_name_excluded_from_checks = any(
         re.match(pattern, branch_name) for pattern in args.exclude_branches_regexes
     )
     try:
         # Check that the branch starts with the GitHub issue number, unless listed as excluded
-        if not branch_name_excluded_from_checks:
-            branch_issue_number = get_issue_number_from_branch_name(branch_name)
-            if branch_issue_number is None:
-                raise BranchNameError(
-                    "Branch name must start with a GitHub issue number followed by a dash."
-                )
+        if (not branch_name_excluded_from_checks) and (branch_issue_number is None):
+            raise BranchNameError(
+                "Branch name must start with a GitHub issue number followed by a dash."
+            )
 
         commit_msg = args.commit_msg_file.read_text()
         message_issue_numbers = get_issue_numbers_from_commit_message(commit_msg)
@@ -182,7 +180,7 @@ def main():
                             f"{commit_msg} #{branch_issue_number}"
                         )
             else:
-                # Auto-inserting the issue number into the commit messafe is off
+                # Auto-inserting the issue number into the commit message is off
                 if message_issue_numbers:
                     if not branch_name_excluded_from_checks:
                         # Issue numbers are provided in the commit message, but for the wrong branch

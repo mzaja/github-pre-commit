@@ -12,8 +12,9 @@ from hook.main import (
     BranchNameError,
     CommitMessageError,
     get_issue_number_from_branch_name,
-    get_issue_numbers_from_commit_message
+    get_issue_numbers_from_commit_message,
 )
+
 
 class HookUnitTest(TestCase):
     """Unit tests for the hook."""
@@ -179,6 +180,32 @@ class HookIntegrationTests(TestCase):
         for flag in FLAGS:
             self.call_hook(branch_name, "#31 msg", flag, "--multi-issue-commits")
             self.assertEqual(self.error_code, 0)
+
+    def test_auto_prepend_and_append_excluded_branches(self):
+        """
+        Auto prepend and append work on branches with a valid branch name even if
+        these branches are excluded from the branch name checks.
+
+        On the other hand, when using these options, the branch name must provide the
+        issue number, even if excluded.
+        """
+        commit_msg = "msg"
+
+        # Excluded branch contains the issue number
+        branch_name = "29-brunch"
+        self.call_hook(branch_name, commit_msg, "--auto-prepend", "-x", ".*brunch")
+        self.assertEqual(self.error_code, 0)
+        self.assertEqual(self.commit_msg, "#29 " + commit_msg)
+        self.call_hook(branch_name, commit_msg, "--auto-append", "-x", ".*brunch")
+        self.assertEqual(self.error_code, 0)
+        self.assertEqual(self.commit_msg, commit_msg + " #29")
+
+        # Excluded branch does not contain the issue number
+        branch_name = "master"
+        self.call_hook(branch_name, commit_msg, "--auto-prepend", "-x", "master")
+        self.assertEqual(self.error_code, BranchNameError.exit_code)
+        self.call_hook(branch_name, commit_msg, "--auto-append", "-x", "master")
+        self.assertEqual(self.error_code, BranchNameError.exit_code)
 
 
 if __name__ == "__main__":
