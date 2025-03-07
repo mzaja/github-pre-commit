@@ -8,13 +8,12 @@ from typing import Tuple
 from unittest import TestCase, mock
 
 import hook
-from hook import (
+from hook.main import (
     BranchNameError,
     CommitMessageError,
     get_issue_number_from_branch_name,
-    get_issue_numbers_from_commit_message,
+    get_issue_numbers_from_commit_message
 )
-
 
 class HookUnitTest(TestCase):
     """Unit tests for the hook."""
@@ -85,7 +84,7 @@ class HookIntegrationTests(TestCase):
                     self.assertRaises(SystemExit) as ctx,
                     redirect_stderr(stderr_buffer),
                 ):
-                    hook.main()
+                    hook.main.main()
                 self.error_code = ctx.exception.code
                 self.commit_msg = Path(tmpfile.name).read_text()
                 self.stderr = stderr_buffer.getvalue()
