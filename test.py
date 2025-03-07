@@ -78,7 +78,7 @@ class HookIntegrationTests(TestCase):
                 mock_get_branch_name.return_value = branch_name
                 # pre-commit inserts all the args hooks before the commit file name
                 # This is a very important distinction when using options accepting
-                # multiple arguments. If this is provided as the last option, 
+                # multiple arguments. If this is provided as the last option,
                 sys.argv = [hook.__name__] + list(args) + [str(tmpfile.name)]
                 stderr_buffer = StringIO()
                 with (
