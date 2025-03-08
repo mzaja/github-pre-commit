@@ -7,7 +7,7 @@ A pre-commit hook for checking commits against GitHub conventions. Ensures that 
 This hook does not check whether the issue number actually exists in the repository, only that the branch name and the commit message satisfy the conventions.
 
 ## Installation
-To use this hook in your project, add the following entry to `repos` section inside `.pre-commit.config.yaml` file:
+To use this hook in your project, add the following entry to `repos` section inside `.pre-commit-config.yaml` file:
 ```yml
   - repo: https://github.com/mzaja/github-pre-commit
     rev: v1.0.0
